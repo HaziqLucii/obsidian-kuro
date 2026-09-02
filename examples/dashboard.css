@@ -1,0 +1,256 @@
+/* Meekco dashboard — Kuro "system dossier".
+   Pairs with the Kuro theme (consumes --ink / --line / --f-mono etc.),
+   but degrades gracefully via fallbacks. Scoped to `cssclasses: dashboard`. */
+
+/* @settings
+
+name: Kuro · Dashboard
+id: kuro-dashboard
+settings:
+    -
+        id: kuro-dash-kanji
+        title: Dashboard kanji watermark
+        description: Giant faint 集 ("gather / collect") behind the homepage.
+        type: class-toggle
+        default: true
+    -
+        id: kuro-dash-margin
+        title: Vertical margin dossier text
+        description: Rotated mono strip down the left edge of the Dashboard.
+        type: class-toggle
+        default: true
+
+*/
+
+.dashboard {
+  --dk-ink: var(--ink, #cdc4ba);
+  --dk-line: var(--line, rgba(205,196,186,.2));
+  --dk-line-strong: var(--line-strong, rgba(205,196,186,.42));
+  --dk-muted: var(--ink-muted, rgba(205,196,186,.6));
+  --dk-faint: var(--ink-faint, rgba(205,196,186,.4));
+  --dk-raised: var(--paper-raised, #131210);
+  --dk-tint: var(--tint, rgba(205,196,186,.05));
+  --dk-mono: var(--f-mono, "Space Mono", ui-monospace, monospace);
+  --dk-sans: var(--f-sans, "Space Grotesk", system-ui, sans-serif);
+  --dk-display: var(--f-display, "Fraunces", ui-serif, Georgia, serif);
+  --dk-jp: var(--f-jp, "Noto Sans JP", sans-serif);
+  --dk-radius: var(--kuro-radius, 2px);
+  position: relative;
+}
+
+/* ---------- constrain the dashboard to a Swiss max-column ----------
+   Without this the bento explodes across an ultra-wide editor into
+   sparse empty modules. Cap + centre regardless of "readable line length". */
+.dashboard .markdown-preview-sizer,
+.dashboard .cm-sizer {
+  max-width: min(1160px, 100%) !important;
+  width: 100% !important;
+  margin-inline: auto !important;
+  position: relative;
+}
+
+/* ---------- giant faint kanji watermark (right gutter) ---------- */
+.kuro-dash-kanji .dashboard .markdown-preview-sizer::before,
+.kuro-dash-kanji .dashboard .cm-sizer::before {
+  content: "集";
+  font-family: var(--dk-jp);
+  position: absolute;
+  right: -0.28em;
+  bottom: 6vh;
+  font-size: clamp(180px, 30vw, 440px);
+  font-weight: 300;
+  line-height: 0.8;
+  color: var(--dk-ink);
+  opacity: 0.035;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* ---------- vertical dossier strip, pinned to the left gutter ---------- */
+.kuro-dash-margin .dashboard .markdown-preview-sizer::after,
+.kuro-dash-margin .dashboard .cm-sizer::after {
+  /* customise this label to your own */
+  content: "OBSIDIAN · KURO · MONOCHROME · SHOT ON BLACK";
+  position: absolute;
+  left: -1.9rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+  writing-mode: vertical-rl;
+  font-family: var(--dk-mono);
+  font-size: 10px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--dk-faint);
+  opacity: 0.6;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1;
+}
+/* hide the flourishes when there is no room for gutters */
+@media (max-width: 1240px) {
+  .kuro-dash-margin .dashboard .markdown-preview-sizer::after,
+  .kuro-dash-margin .dashboard .cm-sizer::after { display: none; }
+}
+
+.dashboard .markdown-preview-sizer > div,
+.dashboard .cm-sizer > div { position: relative; z-index: 1; }
+
+/* ---------- header wordmark ---------- */
+.dashboard h1 {
+  font-family: var(--dk-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 9vw, 6rem);
+  letter-spacing: -0.03em;
+  line-height: 0.94;
+  margin: 0.1em 0 0.1em;
+  border: none;
+}
+.dashboard .dossier-meta {
+  font-family: var(--dk-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.66rem;
+  color: var(--dk-muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2em 1.4em;
+  margin: 0 0 0.4rem;
+}
+.dashboard .dossier-meta b { color: var(--dk-ink); font-weight: 700; }
+.dashboard .dossier-rule { height: 1px; background: var(--dk-line); margin: 0.5rem 0 1.6rem; }
+
+/* section headers become spec-sheet labels */
+.dashboard h2 {
+  font-family: var(--dk-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.78rem;
+  color: var(--dk-muted);
+  font-weight: 700;
+  border: none;
+  margin: 2rem 0 0.4rem;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+.dashboard h2::after { content: ""; flex: 1; height: 1px; background: var(--dk-line); }
+
+/* ---------- bento ---------- */
+.dashboard .bento {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-auto-rows: minmax(96px, auto);
+  gap: 1px;
+  background: var(--dk-line);
+  border: 1px solid var(--dk-line);
+  margin: 0.6rem 0 1.6rem;
+}
+
+.dashboard .tile {
+  background: var(--dk-raised);
+  border: none;
+  border-radius: 0;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+  min-height: 104px;
+  transition: background 0.14s ease, color 0.14s ease;
+  position: relative;
+}
+.dashboard .tile:hover { background: var(--dk-tint); }
+.dashboard .tile:hover .tile-label { color: var(--dk-ink); }
+
+.dashboard .tile-num {
+  font-family: var(--dk-sans);
+  font-size: 2.6rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--dk-ink);
+  font-variant-numeric: tabular-nums;
+}
+.dashboard .tile-label {
+  font-family: var(--dk-mono);
+  font-size: 0.64rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dk-muted);
+  font-weight: 700;
+  transition: color 0.14s ease;
+}
+.dashboard .tile-sub {
+  font-family: var(--dk-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dk-faint);
+  margin-top: 0.4rem;
+}
+
+/* link tiles: label acts as the whole target */
+.dashboard .tile a { text-decoration: none; color: inherit; display: block; }
+.dashboard .tile a .tile-label { font-size: 0.76rem; letter-spacing: 0.04em; color: var(--dk-ink); }
+.dashboard .tile a:hover .tile-label { text-decoration: none; }
+
+/* accent tile = bone fill, black ink (the "INSTALL" button feel) */
+.dashboard .tile-accent { background: var(--dk-ink); }
+.dashboard .tile-accent .tile-num,
+.dashboard .tile-accent .tile-label { color: var(--paper, #0b0a09); }
+.dashboard .tile-accent:hover { background: #fff; }
+
+/* monochrome status: no red/green. warn = strong top hairline + marker. */
+.dashboard .tile-good .tile-num { color: var(--dk-ink); }
+.dashboard .tile-warn { box-shadow: inset 0 2px 0 0 var(--dk-line-strong); }
+.dashboard .tile-warn .tile-num { color: var(--dk-ink); }
+.dashboard .tile-warn .tile-label::before { content: "! "; color: var(--dk-muted); }
+
+/* ---------- wide list tiles = key→value spec rows ---------- */
+.dashboard .tile-wide { grid-column: 1 / -1; align-items: stretch; justify-content: flex-start; }
+.dashboard .tile-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; }
+.dashboard .tile-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--dk-mono);
+  font-size: 0.8rem;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--dk-line);
+}
+.dashboard .tile-list li:last-child { border-bottom: none; }
+.dashboard .tile-list li > span:first-child { color: var(--dk-ink); }
+.dashboard .tile-list .muted {
+  color: var(--dk-faint);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dashboard .tile-list a { text-decoration: none; }
+
+/* ---------- embedded notes flow inline (kill the inner scroll box) ----------
+   Obsidian wraps ![[embeds]] in .markdown-embed with a max-height + overflow:auto,
+   so the tall Stats note scrolls in a little box. On the dashboard, let it flow. */
+.dashboard .markdown-embed,
+.dashboard .markdown-embed-content {
+  max-height: none !important;
+  overflow: visible !important;
+}
+.dashboard .markdown-embed {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+.dashboard .markdown-embed-title { display: none; }
+
+/* ---------- callouts on the dashboard ---------- */
+.dashboard .callout { border-radius: var(--dk-radius); margin: 12px 0; }
+
+@media (max-width: 620px) {
+  .dashboard .bento { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
+}

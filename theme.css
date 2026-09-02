@@ -1,0 +1,523 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@200..700&display=swap');
+
+/* ============================================================
+   KURO  —  Swiss-Japanese monospace theme for Obsidian
+   Warm bone ink on near-black. No accent colour: hierarchy is
+   ink opacity + hairline rules. Inspired by ryoku.dev.
+   ============================================================ */
+
+/* @settings
+
+name: Kuro
+id: kuro
+settings:
+    -
+        id: kuro-info
+        title: Ryoku
+        description: Swiss-Japanese monospace. Warm bone ink on near-black, hairline rules, sharp corners. Toggles below are safe to flip live.
+        type: info-text
+        markdown: false
+    -
+        id: kuro-typography
+        title: Typography
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: kuro-sans-body
+        title: Readable body font (sans)
+        description: Swap note body from Space Mono to Space Grotesk. Easier on long reads; keeps mono for labels & code.
+        type: class-toggle
+        default: false
+    -
+        id: kuro-vault-fonts
+        title: Use installed vault fonts
+        description: Fall back to your JetBrains Mono / Anthropic Serif+Sans instead of the web-loaded Ryoku set. Works fully offline.
+        type: class-toggle
+        default: false
+    -
+        id: kuro-mono-headings
+        title: Monospace headings
+        description: Render the H1 in Space Mono uppercase instead of the Fraunces serif wordmark.
+        type: class-toggle
+        default: false
+    -
+        id: kuro-feel
+        title: Feel
+        type: heading
+        level: 2
+        collapsed: false
+    -
+        id: kuro-immersive
+        title: Full immersive
+        description: Pure black surfaces, higher-contrast ink, tighter spacing across every note and panel.
+        type: class-toggle
+        default: false
+    -
+        id: kuro-grain
+        title: Paper grain texture
+        description: Faint film grain over the whole workspace.
+        type: class-toggle
+        default: true
+    -
+        id: kuro-tone
+        title: Ink tone
+        description: The single monochrome hue everything is built from.
+        type: class-select
+        allowEmpty: false
+        default: kuro-tone-bone
+        options:
+            -
+                label: Bone (warm)
+                value: kuro-tone-bone
+            -
+                label: Ash (neutral)
+                value: kuro-tone-ash
+            -
+                label: Sand (warmer)
+                value: kuro-tone-sand
+    -
+        id: kuro-radius
+        title: Corner radius
+        description: 0 = brutal squares. 2 = the Ryoku default hairline round.
+        type: variable-number-slider
+        default: 2
+        min: 0
+        max: 12
+        step: 1
+        format: px
+
+*/
+
+/* ---------- shared tokens ---------- */
+body {
+  --f-display: "Fraunces", ui-serif, Georgia, serif;
+  --f-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --f-mono: "Space Mono", ui-monospace, "JetBrains Mono", "SFMono-Regular", monospace;
+  --f-jp: "Noto Sans JP", "Hiragino Sans", sans-serif;
+
+  --kuro-radius: 2px;
+  --radius-s: var(--kuro-radius);
+  --radius-m: var(--kuro-radius);
+  --radius-l: var(--kuro-radius);
+  --radius-xl: var(--kuro-radius);
+
+  /* fonts — active by default; overrides are cleared in appearance.json */
+  --font-text-theme: var(--f-mono);
+  --font-interface-theme: var(--f-sans);
+  --font-monospace-theme: var(--f-mono);
+  --font-text-size: 15px;
+
+  /* warm bone ink ramp (tone = Bone) */
+  --kuro-ink: 205, 196, 186;   /* #cdc4ba */
+  --ink: rgb(var(--kuro-ink));
+  --ink-dim: rgba(var(--kuro-ink), 0.86);
+  --ink-muted: rgba(var(--kuro-ink), 0.60);
+  --ink-faint: rgba(var(--kuro-ink), 0.40);
+  --line: rgba(var(--kuro-ink), 0.20);
+  --line-soft: rgba(var(--kuro-ink), 0.10);
+  --line-strong: rgba(var(--kuro-ink), 0.42);
+  --tint: rgba(var(--kuro-ink), 0.05);
+  --tint-2: rgba(var(--kuro-ink), 0.10);
+
+  --accent-h: 33;
+  --accent-s: 18%;
+  --accent-l: 76%;
+}
+
+/* Ink tone variants */
+body.kuro-tone-ash  { --kuro-ink: 190, 190, 188; }
+body.kuro-tone-sand { --kuro-ink: 214, 199, 180; }
+
+/* ---------- DARK (primary) ---------- */
+.theme-dark {
+  --paper: #0b0a09;
+  --paper-raised: #131210;
+  --paper-edge: #050504;
+
+  --background-primary: var(--paper);
+  --background-primary-alt: #100e0d;
+  --background-secondary: var(--paper-edge);
+  --background-secondary-alt: #030302;
+
+  --background-modifier-border: var(--line);
+  --background-modifier-border-hover: var(--line-strong);
+  --background-modifier-border-focus: var(--ink-muted);
+  --background-modifier-hover: var(--tint);
+  --background-modifier-active-hover: var(--tint-2);
+  --divider-color: var(--line);
+  --divider-color-hover: var(--line-strong);
+
+  --text-normal: var(--ink);
+  --text-muted: var(--ink-muted);
+  --text-faint: var(--ink-faint);
+  --text-on-accent: #0b0a09;
+  --text-on-accent-inverted: #0b0a09;
+  --text-accent: var(--ink);
+  --text-accent-hover: #ffffff;
+  --text-selection: rgba(var(--kuro-ink), 0.18);
+  --text-highlight-bg: rgba(var(--kuro-ink), 0.22);
+
+  --interactive-normal: #131210;
+  --interactive-hover: #1b1917;
+  --interactive-accent: var(--ink);
+  --interactive-accent-hover: #ffffff;
+
+  --caret-color: var(--ink);
+}
+
+/* ---------- LIGHT (paper) ---------- */
+.theme-light {
+  --kuro-ink: 38, 34, 29;      /* dark warm ink for light mode */
+  --ink: rgb(var(--kuro-ink));
+  --ink-dim: rgba(var(--kuro-ink), 0.82);
+  --ink-muted: rgba(var(--kuro-ink), 0.58);
+  --ink-faint: rgba(var(--kuro-ink), 0.38);
+  --line: rgba(var(--kuro-ink), 0.22);
+  --line-soft: rgba(var(--kuro-ink), 0.11);
+  --line-strong: rgba(var(--kuro-ink), 0.45);
+  --tint: rgba(var(--kuro-ink), 0.045);
+  --tint-2: rgba(var(--kuro-ink), 0.09);
+
+  --paper: #ece7dd;
+  --paper-raised: #e3ddd1;
+  --paper-edge: #e6e0d5;
+
+  --background-primary: var(--paper);
+  --background-primary-alt: #e6e0d5;
+  --background-secondary: var(--paper-edge);
+  --background-secondary-alt: #dfd8cb;
+
+  --background-modifier-border: var(--line);
+  --background-modifier-border-hover: var(--line-strong);
+  --background-modifier-border-focus: var(--ink-muted);
+  --background-modifier-hover: var(--tint);
+  --divider-color: var(--line);
+
+  --text-normal: var(--ink);
+  --text-muted: var(--ink-muted);
+  --text-faint: var(--ink-faint);
+  --text-on-accent: #ece7dd;
+  --text-accent: var(--ink);
+  --text-accent-hover: #000000;
+  --text-selection: rgba(var(--kuro-ink), 0.14);
+
+  --interactive-normal: #e3ddd1;
+  --interactive-hover: #d9d2c4;
+  --interactive-accent: var(--ink);
+  --interactive-accent-hover: #000000;
+  --caret-color: var(--ink);
+}
+
+/* ---------- immersive: pure black, higher contrast ---------- */
+body.kuro-immersive.theme-dark {
+  --kuro-ink: 214, 206, 197;
+  --paper: #000000;
+  --paper-raised: #0a0908;
+  --background-primary: #000000;
+  --background-primary-alt: #060505;
+  --background-secondary: #000000;
+  --background-secondary-alt: #000000;
+  --font-text-size: 14.5px;
+}
+
+/* ============================================================
+   SHADOWS  —  Ryoku uses hairlines, not depth
+   ============================================================ */
+body {
+  --shadow-s: none;
+  --shadow-l: none;
+  --input-shadow: none;
+  --input-shadow-hover: none;
+  --shadow-modal: 0 0 0 1px var(--line);
+}
+.theme-dark, .theme-light { box-shadow: none; }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+body {
+  --font-text: var(--font-text-theme);
+  --line-height-normal: 1.75;
+  --line-height-tight: 1.35;
+  --p-spacing: 1.05rem;
+  --file-line-width: 42rem;
+  --font-smoothing: antialiased;
+}
+body.kuro-immersive { --line-height-normal: 1.7; }
+
+/* readable-body opt-out */
+body.kuro-sans-body { --font-text-theme: var(--f-sans); }
+body.kuro-sans-body .markdown-preview-view,
+body.kuro-sans-body .markdown-source-view.mod-cm6 .cm-content { font-family: var(--f-sans); }
+
+/* installed-vault-fonts opt-out */
+body.kuro-vault-fonts {
+  --f-display: "Anthropic Serif Display", ui-serif, Georgia, serif;
+  --f-sans: "Anthropic Sans Display", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, monospace;
+  --f-jp: "Noto Sans JP", "Hiragino Sans", sans-serif;
+}
+
+/* Headings — H1 Fraunces wordmark, H2 grotesk, H3-6 mono section-labels */
+.markdown-rendered h1, .cm-header-1,
+.markdown-rendered h2, .cm-header-2,
+.markdown-rendered h3, .cm-header-3,
+.markdown-rendered h4, .cm-header-4,
+.markdown-rendered h5, .cm-header-5,
+.markdown-rendered h6, .cm-header-6 { color: var(--ink); }
+
+.markdown-rendered h1, .HyperMD-header-1 {
+  font-family: var(--f-display);
+  font-weight: 400;
+  font-size: 2.85em;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+body.kuro-mono-headings .markdown-rendered h1,
+body.kuro-mono-headings .HyperMD-header-1 {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 2em;
+}
+.markdown-rendered h2, .HyperMD-header-2 {
+  font-family: var(--f-sans);
+  font-weight: 500;
+  font-size: 1.7em;
+  letter-spacing: -0.01em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--line);
+}
+.markdown-rendered h3, .HyperMD-header-3,
+.markdown-rendered h4, .HyperMD-header-4,
+.markdown-rendered h5, .HyperMD-header-5,
+.markdown-rendered h6, .HyperMD-header-6 {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-dim);
+}
+.markdown-rendered h3, .HyperMD-header-3 { font-size: 0.92em; }
+.markdown-rendered h4, .HyperMD-header-4 { font-size: 0.82em; color: var(--ink-muted); }
+.markdown-rendered h5, .HyperMD-header-5,
+.markdown-rendered h6, .HyperMD-header-6 { font-size: 0.76em; color: var(--ink-muted); }
+
+.markdown-rendered strong, .cm-strong { color: var(--ink); font-weight: 700; }
+.markdown-rendered em, .cm-em { color: var(--ink-dim); }
+
+/* Inline mono flourish for the "system" chrome */
+.titlebar-text, .workspace-tab-header-inner-title,
+.nav-file-title-content, .nav-folder-title-content,
+.status-bar-item, .view-header-title, .tooltip {
+  font-family: var(--f-sans);
+}
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+.markdown-rendered a.internal-link,
+.markdown-rendered a.external-link,
+.cm-link, .cm-url, .cm-hmd-internal-link {
+  color: var(--ink);
+  text-decoration: none;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+.markdown-rendered a.internal-link:hover,
+.markdown-rendered a.external-link:hover {
+  color: var(--text-accent-hover);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+.markdown-rendered a.internal-link.is-unresolved { color: var(--ink-faint); text-decoration-style: dotted; }
+.markdown-rendered a.external-link { background: none; padding-right: 0; }
+
+/* ============================================================
+   CODE
+   ============================================================ */
+body {
+  --code-background: var(--paper-raised);
+  --code-normal: var(--ink);
+  --code-size: 0.86em;
+  --code-radius: var(--kuro-radius);
+}
+.markdown-rendered code, .cm-inline-code {
+  font-family: var(--f-mono);
+  border: 1px solid var(--line-soft);
+  padding: 0.08em 0.4em;
+  border-radius: var(--kuro-radius);
+}
+.markdown-rendered pre, .HyperMD-codeblock-bg {
+  border: 1px solid var(--line);
+  border-radius: var(--kuro-radius);
+}
+.markdown-rendered pre code { border: none; }
+
+/* ============================================================
+   RULES / BLOCKQUOTES / CALLOUTS
+   ============================================================ */
+body { --hr-color: var(--line); --hr-thickness: 1px; }
+.markdown-rendered hr { border-color: var(--line); }
+
+.markdown-rendered blockquote {
+  border-left: 1px solid var(--line-strong);
+  color: var(--ink-dim);
+  background: none;
+  padding-left: 1.1em;
+  font-style: normal;
+}
+
+body {
+  --callout-border-width: 1px;
+  --callout-border-opacity: 1;
+  --callout-radius: var(--kuro-radius);
+  --callout-padding: 0.9em 1.1em;
+  --callout-blend-mode: normal;
+}
+.callout {
+  background: var(--tint);
+  border: 1px solid var(--line);
+  border-left-width: 1px;
+  --callout-color: var(--ink) !important;
+}
+.callout .callout-title {
+  font-family: var(--f-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72em;
+  color: var(--ink-muted);
+}
+.callout .callout-icon svg { color: var(--ink-muted); }
+
+/* ============================================================
+   TABLES  —  Swiss grid, uppercase mono header
+   ============================================================ */
+.markdown-rendered table { border: 1px solid var(--line); border-collapse: collapse; }
+.markdown-rendered th {
+  font-family: var(--f-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72em;
+  font-weight: 700;
+  color: var(--ink-muted);
+  background: var(--tint);
+  border: 1px solid var(--line);
+}
+.markdown-rendered td { border: 1px solid var(--line-soft); }
+
+/* ============================================================
+   TAGS / PROPERTIES  —  bracketed mono
+   ============================================================ */
+.markdown-rendered a.tag, .cm-hashtag {
+  font-family: var(--f-mono);
+  font-size: 0.74em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-muted);
+  background: var(--tint);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--kuro-radius);
+  padding: 0.1em 0.5em;
+}
+.markdown-rendered a.tag:hover { color: var(--ink); border-color: var(--line-strong); }
+
+.metadata-container { border: 1px solid var(--line); border-radius: var(--kuro-radius); background: var(--tint); }
+.metadata-property-key { font-family: var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.78em; color: var(--ink-muted); }
+.metadata-property-icon { color: var(--ink-faint); }
+
+/* ============================================================
+   APP CHROME  —  titlebar, tabs, sidebars, status bar
+   ============================================================ */
+.workspace-tab-header-inner-title { font-family: var(--f-mono); font-size: 0.78em; letter-spacing: 0.02em; }
+.workspace-tab-header.is-active { --tab-text-color-focused-active: var(--ink); }
+.workspace-tab-header.is-active .workspace-tab-header-inner {
+  box-shadow: inset 0 -1px 0 0 var(--ink);
+}
+.workspace-tabs .workspace-tab-header-container { border-bottom: 1px solid var(--line); }
+
+.nav-file-title, .nav-folder-title { border-radius: var(--kuro-radius); }
+.nav-file-title.is-active, .tree-item-self.is-active {
+  background: var(--tint-2) !important;
+  box-shadow: inset 2px 0 0 0 var(--ink);
+}
+.nav-folder-title-content { font-weight: 600; }
+
+.status-bar {
+  border-top: 1px solid var(--line);
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.view-header-title { font-family: var(--f-sans); font-weight: 500; }
+.view-header { border-bottom: 1px solid var(--line-soft); }
+
+.workspace-ribbon { border-right: 1px solid var(--line); }
+.side-dock-ribbon-action:hover { color: var(--ink); }
+
+/* Inputs & buttons — sharp, hairline */
+input[type="text"], input[type="search"], textarea, .search-input-container input {
+  font-family: var(--f-mono);
+  border: 1px solid var(--line);
+  border-radius: var(--kuro-radius);
+  background: var(--paper-raised);
+}
+button, .clickable-icon {
+  border-radius: var(--kuro-radius);
+}
+button.mod-cta {
+  font-family: var(--f-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78em;
+  background: var(--ink);
+  color: var(--text-on-accent);
+  border: 1px solid var(--ink);
+}
+button.mod-cta:hover { background: var(--text-accent-hover); border-color: var(--text-accent-hover); }
+
+/* Prompt / command palette / modals */
+.modal, .suggestion-container, .prompt {
+  border: 1px solid var(--line);
+  border-radius: var(--kuro-radius);
+}
+.prompt-input { font-family: var(--f-mono); }
+.suggestion-item.is-selected { background: var(--tint-2); box-shadow: inset 2px 0 0 0 var(--ink); }
+
+/* Scrollbars — thin bone */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 0; }
+::-webkit-scrollbar-thumb:hover { background: var(--line-strong); }
+
+/* Checkboxes — square, bone tick */
+input[type="checkbox"] { border-radius: var(--kuro-radius); border: 1px solid var(--line-strong); }
+input[type="checkbox"]:checked { background: var(--ink); border-color: var(--ink); }
+
+/* Selection */
+::selection { background: var(--text-selection); }
+
+/* ============================================================
+   GRAIN  —  faint film over the workspace (default on)
+   ============================================================ */
+body.kuro-grain .app-container::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.theme-light.kuro-grain .app-container::after { mix-blend-mode: multiply; opacity: 0.05; }
+
+/* Graph view — monochrome */
+.graph-view.color-fill { color: var(--ink-muted); }
+.graph-view.color-line { color: var(--line); }
+.graph-view.color-text { color: var(--ink); }
+.graph-view.color-circle { color: var(--ink); }
