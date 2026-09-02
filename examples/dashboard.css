@@ -233,11 +233,14 @@ settings:
 .dashboard .tile-list a { text-decoration: none; }
 
 /* ---------- embedded notes flow inline (kill the inner scroll box) ----------
-   Obsidian wraps ![[embeds]] in .markdown-embed with a max-height + overflow:auto,
-   so the tall Stats note scrolls in a little box. On the dashboard, let it flow. */
-.dashboard .markdown-embed,
-.dashboard .markdown-embed-content {
+   Obsidian constrains ![[embeds]] with a fixed height + overflow:auto, so the
+   tall Stats note scrolls in a little box. Unclip every layer it might set. */
+.dashboard .internal-embed,
+.dashboard [class*="markdown-embed"],
+.dashboard .markdown-embed .markdown-preview-view,
+.dashboard .markdown-embed .markdown-preview-sizer {
   max-height: none !important;
+  height: auto !important;
   overflow: visible !important;
 }
 .dashboard .markdown-embed {
